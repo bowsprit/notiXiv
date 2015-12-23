@@ -10,12 +10,12 @@ products.*
 
 
 ## Structure
--   #### Frontend
+-   **Frontend**
     +   **API**: to manage user-subscription and notification information (i.e. to interact with
         backend).
     +   **Website**: interface to the API, for user-subscription management.
     +   **Notifications**: E-Mail, RSS, etc based daily notifications of subscription results.
--   #### Backend
+-   **Backend**
     +   **Databases**: store user and subscription information.
     +   **Scraping**: gather and analyze daily arXiv publications.
 
