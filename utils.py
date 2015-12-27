@@ -63,8 +63,9 @@ def getLogger(name, strLevel=logging.WARNING, fileLevel=logging.DEBUG, tofile=No
     # Determine and Set Logging Levels
     if fileLevel is None: fileLevel = logging.DEBUG
     if strLevel is None: strLevel = logging.WARNING
-    #     Logger object must be at minimum level
-    logger.setLevel(np.min([fileLevel, strLevel]))
+    #     Logger object must be at minimum level (cast to int to avoid error)
+    useLevel = int(np.min([fileLevel, strLevel]))
+    logger.setLevel(useLevel)
 
     dateFmt = '%Y/%m/%d %H:%M:%S'
     fileFmt = "%(asctime)s %(levelname)8.8s [%(filename)20.20s:"
