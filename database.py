@@ -1,7 +1,12 @@
 """
 """
+import logging
+
 import sqlalchemy as sqla
 import sqlalchemy_utils as sqla_utils
+
+
+import utils
 
 DATABASE = {
     'drivername': 'postgres',
@@ -12,7 +17,7 @@ DATABASE = {
     'database': 'test_db'
 }
 
-DeclarativeBase = sqla.ext.declarative.declarative_base
+DeclarativeBase = sqla.ext.declarative.declarative_base()
 
 
 class ArticleModel(DeclarativeBase):
@@ -62,32 +67,38 @@ class UserModel(DeclarativeBase):
 class Pipeline(object):
     """
     """
-    def __init__(self):
+    def __init__(self, log):
         url = sqla.engine.url.URL(**DATABASE)
         engine = sqla.create_engine(url, echo=True)
+        self.engine = engine
 
+        # Create Database if it doesnt exist
+        db_exists = sqla_utils.database_exists(engine.url)
+        log.debug("-   Database exists: ", db_exists)
+        if not db_exists:
+            sqla_utils.create_database(engine.url)
+            log.debug("    +   Database created.")
 
+        # Create all Tables
+        DeclarativeBase.metadata.create_all(engine)
+        self.Session = sqla.orm.sessionmaker(bind=engine)
+        return
 
+    def drop(self, log):
+        # Delete Database
+        sqla_utils.drop_database(self.engine.url)
+        log.debug("-   Database dropped.")
+        db_exists = sqla_utils.database_exists(self.engine.url)
+        log.debug("    +   Database exists: ", db_exists)
 
 
 def main():
-    print("main()")
+    log = utils.getLogger(__name__, strLevel=logging.DEBUG, fileLevel=logging.DEBUG,
+                          tofile='log_database.txt')
+    log.debug("main()")
 
-    # Create Database if it doesnt exist
-    db_exists = sqla_utils.database_exists(engine.url)
-    print("-   Database exists: ", db_exists)
-    if not db_exists:
-        sqla_utils.create_database(engine.url)
-        print("    +   Database created.")
-
-    # Create all Tables
-    DeclarativeBase.metadata.create_all(engine)
-
-    # Delete Database
-    sqla_utils.drop_database(engine.url)
-    print("-   Database dropped.")
-    db_exists = sqla_utils.database_exists(engine.url)
-    print("    +   Database exists: ", db_exists)
+    pipe = Pipeline(log)
+    pipe.drop(log)
 
     return
 
