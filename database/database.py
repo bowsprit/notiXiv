@@ -10,7 +10,7 @@ _DB_SERVER_ADDRESS = "localhost"
 
 
 def db_url(name, server=_DB_SERVER_TYPE, address=_DB_SERVER_ADDRESS):
-    url = "{}://{}/{}".format(name, address, server)
+    url = "{}://{}/{}".format(server, address, name)
     return url
 
 
@@ -21,10 +21,19 @@ def main():
     engine = sqla.create_engine(url)
     print("-   Engine created.")
 
-    print("-   Database exists?: ", sqla_utils.database_exists(engine.url))
-    sqla_utils.drop_database(engine.url)
-    print(sqla_utils.database_exists(engine.url))
+    db_exists = sqla_utils.database_exists(engine.url)
+    print("-   Database exists: ", db_exists)
 
+    if not db_exists:
+        sqla_utils.create_database(engine.url)
+        print("    +   Database created.")
+
+    sqla_utils.drop_database(engine.url)
+    print("-   Database dropped.")
+    db_exists = sqla_utils.database_exists(engine.url)
+    print("    +   Database exists: ", db_exists)
+
+    return
 
 if __name__ == "__main__":
     main()
