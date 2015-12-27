@@ -21,6 +21,9 @@ products.*
 
 
 ## Databases
+> Looks like [PostgreSQL](http://www.postgresql.org/) might be a good bet for database server.  I'm
+using the [Postgres.app](http://postgresapp.com/) for local testing on my desktop.  [LZK]
+
 ### Users  
 Database for subscribed user information and their notification filters.
 
