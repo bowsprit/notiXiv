@@ -22,7 +22,10 @@ products.*
 
 ## Databases
 > Looks like [PostgreSQL](http://www.postgresql.org/) might be a good bet for database server.  I'm
-using the [Postgres.app](http://postgresapp.com/) for local testing on my desktop.  [LZK]
+  using the [Postgres.app](http://postgresapp.com/) for local testing on my desktop.  [LZK]
+> SQLAlchemy seems to require additional python modules for specific SQL systems, e.g.
+  [PyMySQL](http://docs.sqlalchemy.org/en/rel_0_9/dialects/mysql.html#module-sqlalchemy.dialects.mysql.pymysql)
+  for MySQL.  Use ``'drivername': 'mysql+pymysql'`` to tell it which module to use.
 
 ### Users  
 Database for subscribed user information and their notification filters.
